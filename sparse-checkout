@@ -1,0 +1,14 @@
+# README.md
+# dnSpy-Unity-mono-v2017.x-V40.sln
+# dnSpy-Unity-mono-v2017.x.sln
+# dnSpy-Unity-mono-v2018.x-V40.sln
+# dnSpy-Unity-mono-v2018.x.sln
+# dnSpy-Unity-mono-v2019.x-V40.sln
+# dnSpy-Unity-mono-v2019.x.sln
+# dnSpy-Unity-mono-v2020.x-V40.sln
+# dnSpy-Unity-mono-v2020.x.sln
+# dnSpy-Unity-mono-v4.x.sln
+# dnSpy-Unity-mono-v5.x.sln
+dnSpyFiles/*
+extractmono.bat
+src/*

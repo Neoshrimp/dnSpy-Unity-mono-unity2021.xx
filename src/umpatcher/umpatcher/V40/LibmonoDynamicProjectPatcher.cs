@@ -19,14 +19,21 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
 namespace UnityMonoDllSourceCodePatcher.V40 {
 	sealed class LibmonoDynamicProjectPatcher : ProjectPatcherV40 {
-		readonly ProjectInfo libgcbdwgcProject;
+	
+
+		readonly ProjectInfo? libgc;
+		readonly ProjectInfo? libgcbdwgcProject;
 
 		public LibmonoDynamicProjectPatcher(SolutionOptionsV40? solutionOptions)
 			: base(solutionOptions, solutionOptions?.LibmonoDynamicProject) {
-			libgcbdwgcProject = solutionOptions!.LibgcbdwgcProject ?? throw new InvalidOperationException();
+			libgcbdwgcProject = solutionOptions!.LibgcbdwgcProject;
+			libgc = solutionOptions!.LibgcProject;
+			if ((libgc == null && libgcbdwgcProject == null) || (libgc != null && libgcbdwgcProject != null))
+				throw new InvalidOperationException();
 		}
 
 		protected override void PatchCore() {
@@ -34,8 +41,28 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			PatchDebugInformationFormats(ConstantsV40.ReleaseConfigsWithNoPdb);
 			PatchGenerateDebugInformationTags(ConstantsV40.ReleaseConfigsWithNoPdb);
 			AddSourceFiles();
-			AddProjectReference(libgcbdwgcProject);
-			RemoveProjectReference("libgc.vcxproj");
+			if (libgc != null) {
+
+				var coreFxPatcher =  new CoreFxPatcher(solutionOptions);
+				coreFxPatcher.Patch();
+				// change .o files location/name since corefx introdces a duplicate
+				textFilePatcher.GetIndexesOfLine(l => l.Text.Contains(@"<WarningLevel>Level3</WarningLevel>")).ToList()
+					.ForEach(i => UpdateOrCreateTag(i, i, "ObjectFileName", "$(IntDir)%(RelativeDir)"));
+
+				textFilePatcher.Insert(
+					textFilePatcher.GetIndexOfLine(l => l.Text.Contains("<Import Project=\"clrcompression.targets\" />")),
+					@"
+<ItemGroup>
+  <ClInclude Include=""dnSpy.h"" />
+</ItemGroup>
+"
+					);
+	
+			}
+			if (libgcbdwgcProject != null) {
+				AddProjectReference(libgcbdwgcProject);
+				RemoveProjectReference("libgc.vcxproj");
+			}
 			PatchSolutionDir();
 		}
 
@@ -46,5 +73,7 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			textFilePatcher.Insert(index + 1, indent + @"<ClCompile Include=""$(MonoSourceLocation)\mono\mini\dnSpy.c"" />");
 			textFilePatcher.Write();
 		}
+
+		
 	}
 }

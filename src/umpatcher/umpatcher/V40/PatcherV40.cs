@@ -18,6 +18,8 @@
 */
 
 using System;
+using System.IO;
+using System.Linq;
 
 namespace UnityMonoDllSourceCodePatcher.V40 {
 	sealed class PatcherV40 : Patcher {
@@ -31,6 +33,8 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 		static ProjectFilesKind GetProjectFilesKind(string unityVersion) {
 			if (!UnityVersion.TryParse(unityVersion, out var version))
 				throw new InvalidOperationException($"Invalid unity version: {unityVersion}");
+			if (version.Major >= 2021)
+				return ProjectFilesKind.V2021;
 			if (version.Major >= 2018)
 				return ProjectFilesKind.V2018;
 			if (version.Major == 2017)
@@ -42,6 +46,8 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 		protected override string[] Submodules => ConstantsV40.Submodules;
 		protected override string[] UnityFoldersToCopy {
 			get {
+				if (solutionOptions.UnityVersion.Major >= 2021)
+					return ConstantsV40.UnityFoldersToCopy_2021;
 				if (solutionOptions.UnityVersion.Major >= 2018)
 					return ConstantsV40.UnityFoldersToCopy_2018;
 				if (solutionOptions.UnityVersion.Major == 2017)
@@ -50,18 +56,48 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			}
 		}
 
+
+
 		protected override void PatchOriginalFilesCore() {
+			Console.WriteLine("Patching solution and projects");
+			if (solutionOptions.UnityVersion.Major == 2021) {
+				var cleanSolFile = "clean-dnSpy-Unity-mono-v2021.x-V40.sln";				File.Copy(cleanSolFile, PathCombine(dnSpyRepo.RepoPath, cleanSolFile.Substring("clean-".Length)), overwrite: true);
+			}
+
 			new SolutionPatcher(solutionOptions).Patch();
+
+			if (solutionOptions.UnityVersion.Major == 2021) {
+				// quick and dirty fix for corefx libs
+				foreach (var kv in ConstantsV40.UnityFoldersToOverwrite_2021) {
+					FileUtils.CopyDirectoryFromTo(PathCombine(unityRepo.RepoPath, kv.Key), PathCombine(dnSpyVersionPath, kv.Value), overwrite: true);
+				}
+				FileUtils.CopyDirectoryFromTo(PathCombine(dnSpyRepo.RepoPath, "/libatomic_ops-7.6.14"), PathCombine(dnSpyVersionPath, "external/bdwgc/libatomic_ops"));
+
+			}
+
+
 			if (solutionOptions.BuildInitProject != null) new BuildInitProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.EglibProject != null) new EglibProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.GenmdescProject != null) new GenmdescProjectPatcher(solutionOptions).Patch();
+
+			if (solutionOptions.LibgcbdwgcProject != null) new LibgcProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.LibgcbdwgcProject != null) new LibgcbdwgcProjectPatcher(solutionOptions).Patch();
+
 			if (solutionOptions.LibmonoProject != null) new LibmonoProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.LibmonoDynamicProject != null) new LibmonoDynamicProjectPatcher(solutionOptions).Patch();
+
 			if (solutionOptions.LibmonoruntimeProject != null) new LibmonoruntimeProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.LibmonoStaticProject != null) new LibmonoStaticProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.LibmonoutilsProject != null) new LibmonoutilsProjectPatcher(solutionOptions).Patch();
-			new SourceCodePatcher(solutionOptions).Patch();
+
+			Console.WriteLine("Patching source files");
+			var sp = new SourceCodePatcher(solutionOptions);
+			if (solutionOptions.UnityVersion.Major == 2021) {
+				sp.Patch2021();
+			}
+			else {
+				sp.Patch();
+			}
 		}
 	}
 }

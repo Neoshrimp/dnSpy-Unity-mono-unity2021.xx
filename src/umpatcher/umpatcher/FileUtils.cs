@@ -17,6 +17,7 @@
     along with umpatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -28,20 +29,26 @@ namespace UnityMonoDllSourceCodePatcher {
 			return filename;
 		}
 
-		public static void CopyFilesFromTo(string sourceDir, string destinationDir) {
+		public static void CopyFilesFromTo(string sourceDir, string destinationDir, bool overwrite = false) {
+			Console.WriteLine($"CopyFilesFromTo s: {sourceDir}, d: {destinationDir}");
 			Directory.CreateDirectory(destinationDir);
 			foreach (var sourceFile in Directory.GetFiles(sourceDir)) {
 				var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));
-				File.Copy(sourceFile, destFile, overwrite: false);
+				if(!File.Exists(destFile) || overwrite)
+					File.Copy(sourceFile, destFile, overwrite: overwrite);
 			}
 		}
 
-		public static void CopyDirectoryFromTo(string sourceDir, string destinationDir) {
+		// corefx filepaths can be too long for copying....
+		public static void CopyDirectoryFromTo(string sourceDir, string destinationDir, bool overwrite = false) {
+			Console.WriteLine($"CopyDirectoryFromTo s: {sourceDir}, d: {destinationDir}");
 			foreach (var info in GetAllFilesRecursively(sourceDir, destinationDir))
-				File.Copy(info.sourceFile, info.destFile, overwrite: false);
+				if (!File.Exists(info.destFile) || overwrite) {
+					File.Copy(info.sourceFile, info.destFile, overwrite: overwrite);
+				}
 		}
 
-		static IEnumerable<(string sourceFile, string destFile)> GetAllFilesRecursively(string sourceDir, string destinationDir) {
+		public static IEnumerable<(string sourceFile, string destFile)> GetAllFilesRecursively(string sourceDir, string destinationDir) {
 			Directory.CreateDirectory(destinationDir);
 			foreach (var sourceFile in Directory.GetFiles(sourceDir)) {
 				var destFile = Path.Combine(destinationDir, Path.GetFileName(sourceFile));

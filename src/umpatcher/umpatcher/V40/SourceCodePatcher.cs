@@ -1,20 +1,20 @@
 ﻿/*
-    Copyright (C) 2018 de4dot@gmail.com
+	Copyright (C) 2018 de4dot@gmail.com
 
-    This file is part of umpatcher
+	This file is part of umpatcher
 
-    umpatcher is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	umpatcher is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    umpatcher is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	umpatcher is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with umpatcher.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with umpatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
@@ -39,6 +39,48 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			Patch_bdwgc_gcconfig_h();
 		}
 
+		public void Patch2021() { 
+			Patch_mono_metadata_icall_c();
+			Patch2021_mono_metadata_metadata_c();
+			Patch2021_mono_metadata_mono_debug_c();
+			Patch2021_mono_mini_debugger_agent_c();
+			Patch2021_mono_mini_debugger_engine_c();
+			Patch2021_mono_mini_mini_runtime_c();
+
+			Add_mono_mini_dnSpy_c();
+			Patch_masm_fixed_props();
+
+			// gc_atomic_ops.h is unpatched but libatomic is added 
+			Patch_bdwgc_gcconfig_h();
+
+
+		}
+
+		void Patch2021_mono_metadata_metadata_c() { 
+			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "metadata", "metadata.c");
+			var textFilePatcher = new TextFilePatcher(filename);
+			int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("mono_metadata_image_set_foreach")).Single();
+			var lines = textFilePatcher.Lines;
+			lines[index + 2] = lines[index + 2].Replace("//" + lines[index + 2].Text);
+			lines[index + 5] = lines[index + 5].Replace("//" + lines[index + 5].Text);
+			lines[index + 6] = lines[index + 6].Replace("//" + lines[index + 6].Text);
+
+			textFilePatcher.Write();
+
+		}
+
+		void Patch2021_mono_metadata_mono_debug_c() {
+			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "metadata", "mono-debug.c");
+			var textFilePatcher = new TextFilePatcher(filename);
+			int index = textFilePatcher.GetIndexesOfLine(line => line.Text.StartsWith("mono_debug_init (")).Single();
+			var lines = textFilePatcher.Lines;
+			lines[index + 2] = lines[index + 2].Replace("//" + lines[index + 2].Text);
+			textFilePatcher.Insert(index + 2, "\tif (mono_debug_initialized) return;");
+
+			textFilePatcher.Write();
+
+		}
+
 		void Patch_mono_metadata_icall_c() {
 			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "metadata", "icall.c");
 			var textFilePatcher = new TextFilePatcher(filename);
@@ -51,10 +93,95 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			textFilePatcher.Write();
 		}
 
+		void Patch2021_mono_mini_debugger_engine_c() {
+			
+			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "mini", "debugger-engine.c");
+			var textFilePatcher = new TextFilePatcher(filename);
+
+			var lines = textFilePatcher.Lines;
+			int index = textFilePatcher.GetIndexesOfLine(line => line.Text.StartsWith("insert_breakpoint (")).Single();
+			index = textFilePatcher.GetIndexOfLine(line => line.Text.Contains("gboolean it_has_sp = FALSE;"), index);
+			textFilePatcher.Insert(index + 1, "\tSeqPoint found_sp;");
+			index = textFilePatcher.GetIndexOfLine(line => line.Text.Contains("if (it.seq_point.il_offset == bp->il_offset) {"), index);
+			Verify(lines[index + 1].Text, "\t\t\tit_has_sp = TRUE;");
+			Verify(lines[index + 2].Text, "\t\t\tbreak;");
+			index += 2;
+			lines.RemoveAt(index);
+			textFilePatcher.Insert(index++, "\t\t\tif (!(it.seq_point.flags & MONO_SEQ_POINT_FLAG_NONEMPTY_STACK)) {");
+			textFilePatcher.Insert(index++, "\t\t\t\tfound_sp = it.seq_point;");
+			textFilePatcher.Insert(index++, "\t\t\t\tbreak;");
+			textFilePatcher.Insert(index++, "\t\t\t}");
+			textFilePatcher.Insert(index++, "\t\t\tfound_sp = it.seq_point;");
+			Verify(lines[index++].Text, "\t\t}");
+			Verify(lines[index++].Text, "\t}");
+			textFilePatcher.Insert(index++, "\tit.seq_point = found_sp;");
+
+			textFilePatcher.Write();
+		}
+
+		void Patch2021_mono_mini_mini_runtime_c() {
+
+
+			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "mini", "mini-runtime.c");
+			var textFilePatcher = new TextFilePatcher(filename);
+			{
+				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("#include \"mono/utils/mono-tls-inline.h\"")).Single();
+				textFilePatcher.Insert(index + 1, "#include \"../../../DnSpyFiles/dnSpy.h\"");
+
+			}
+			{
+				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("CHECKED_MONO_INIT ();")).Single();
+				textFilePatcher.Insert(++index, string.Empty);
+				textFilePatcher.Insert(++index, "\tdnSpy_debugger_init ();");
+				textFilePatcher.Write();
+			}
+
+
+		}
+
+		void Patch2021_mono_mini_debugger_agent_c() {
+			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "mini", "debugger-agent.c");
+			var textFilePatcher = new TextFilePatcher(filename);
+
+			var lines = textFilePatcher.Lines;
+
+			{
+				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("#include \"mono/metadata/custom-attrs-internals.h\"")).Single();
+				textFilePatcher.Insert(index + 1, "#include \"../../../DnSpyFiles/dnSpy.h\"");
+
+			}
+
+
+			{
+				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("agent_config.setpgid = parse_flag (\"setpgid\", arg + 8)")).Single();
+				Verify(lines[index + 1].Text, "\t\t} else {");
+				textFilePatcher.Insert(index + 1, "\t\t} else if (dnSpy_debugger_agent_parse_options(arg)) {");
+			}
+
+			{
+				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("mono_native_tls_alloc (&debugger_tls_id, NULL);")).Single();
+				Verify(lines[index - 1].Text.Trim(), string.Empty);
+				textFilePatcher.Insert(index, string.Empty);
+				textFilePatcher.Insert(index, "\tdnSpy_debugger_init_after_agent ();");
+			}
+
+			{
+/*				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("case CMD_THREAD_GET_FRAME_INFO: {")).Single();
+				index = textFilePatcher.GetIndexOfLine(line => line.Text.Contains("tls = (DebuggerTlsData *)mono_g_hash_table_lookup (thread_to_tls, thread);"), index);
+				Verify(lines[index + 1].Text, "\t\tmono_loader_unlock ();");*/
+
+
+				//lines[index + 3] = lines[index + 3].Replace("\t\t\treturn ERR_INVALID_ARGUMENT;");
+			}
+
+			textFilePatcher.Write();
+		}
+
 		static void Verify(string value, string expectedValue) {
 			if (value != expectedValue)
 				throw new ProgramException($"Line is '{value}' but expected line is '{expectedValue}'");
 		}
+
 
 		void Patch_mono_mini_debugger_agent_c() {
 			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "mini", "debugger-agent.c");
@@ -70,7 +197,7 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 			{
 				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("mono_native_tls_alloc (&debugger_tls_id, NULL);")).Single();
-				Verify(lines[index - 1].Text, string.Empty);
+				Verify(lines[index - 1].Text.Trim(), string.Empty);
 				textFilePatcher.Insert(index, string.Empty);
 				textFilePatcher.Insert(index, "\tdnSpy_debugger_init_after_agent ();");
 			}
@@ -98,10 +225,16 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 				int index = textFilePatcher.GetIndexesOfLine(line => line.Text.Contains("case CMD_THREAD_GET_FRAME_INFO: {")).Single();
 				index = textFilePatcher.GetIndexOfLine(line => line.Text.Contains("tls = (DebuggerTlsData *)mono_g_hash_table_lookup (thread_to_tls, thread);"), index);
 				Verify(lines[index + 1].Text, "\t\tmono_loader_unlock ();");
-				if(lines[index + 2].Text == "\t\tg_assert (tls);") {
+
+
+				if (lines[index + 2].Text == "\t\tg_assert (tls);") {
 					lines[index + 2] = lines[index + 2].Replace("\t\tif (!tls)");
 					textFilePatcher.Insert(index + 3, "\t\t\treturn ERR_INVALID_ARGUMENT;");
 				}
+				else {
+					//lines[index + 3] = lines[index + 3].Replace("\t\t\treturn ERR_INVALID_ARGUMENT;");
+				}
+
 			}
 
 			textFilePatcher.Write();

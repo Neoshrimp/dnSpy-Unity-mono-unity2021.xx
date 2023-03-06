@@ -43,6 +43,7 @@ namespace UnityMonoDllSourceCodePatcher {
 		protected abstract void PatchCore();
 
 		public void Patch() {
+			Console.WriteLine($"Patching {project.Filename}...");
 			PatchToolsVersion();
 			PatchProjectGuidTags();
 			PatchProjectTags();
@@ -203,10 +204,22 @@ namespace UnityMonoDllSourceCodePatcher {
 					return line;
 				const string PATTERN = "\">";
 				int index = line.Text.IndexOf(PATTERN);
-				if (!line.Text.Contains("<OutDir Condition") || !line.Text.EndsWith("</OutDir>") || index < 0)
-					throw new ProgramException("Unexpected tag content");
+				// || index < 0
+				var newText = "";
 				var first = line.Text.Substring(0, index + PATTERN.Length);
-				var newText = first + newValue + "</OutDir>";
+				if (line.Text.Contains("<OutDir Condition") && line.Text.EndsWith("</OutDir>")) {
+					newText = first + newValue + "</OutDir>";
+				}
+				// for unity versions 2021+
+				else if (line.Text.Contains("<OutDir>") && line.Text.EndsWith("</OutDir>")) {
+					newText = "<OutDir>" + newValue + "</OutDir>";
+				}
+
+
+				if (newText == "")
+					throw new ProgramException($"Unexpected tag content in {project.Filename}");
+
+
 				return line.Replace(newText);
 			});
 		}

@@ -28,7 +28,9 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 		protected override void PatchCore() {
 			AddSourceFiles();
-			RemoveProjectReference("libgc.vcxproj");
+
+			if(solutionOptions.LibgcProject == null)
+				RemoveProjectReference("libgc.vcxproj");
 			RemoveProjectReference("libgcmonosgen.vcxproj");
 			PatchSolutionDir();
 		}

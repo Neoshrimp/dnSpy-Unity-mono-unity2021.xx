@@ -18,11 +18,14 @@
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UnityMonoDllSourceCodePatcher.V40 {
 	static class ConstantsV40 {
 		public static readonly string[] Submodules = new string[] {
 			"external/bdwgc",
+			"external/corefx"
 		};
 
 		public static readonly string[] UnityFoldersToCopy_2017 = new string[] {
@@ -37,6 +40,19 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			"mono",
 			"msvc",
 		};
+
+		public static readonly string[] UnityFoldersToCopy_2021 = new string[] {
+			"external/bdwgc",
+			"external/corefx/src/Native/AnyOS/brotli",
+			"support",
+			"mono",
+			"msvc",
+		};
+
+		public static readonly Dictionary<string, string> UnityFoldersToOverwrite_2021 = new Dictionary<string, string>() {
+			{ "external/corefx-bugfix", "external/corefx" }
+		};
+
 
 		public const string SolutionFilenameFormatString = "dnSpy-Unity-mono-v{0}.x-V40.sln";
 		public static readonly string[] SolutionConfigurations = new string[] {
@@ -63,7 +79,10 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 		public static readonly Guid OldGuid_build_init = new Guid("92AE7622-5F58-4234-9A26-9EC71876B3F4");
 		public static readonly Guid OldGuid_eglib = new Guid("158073ED-99AE-4196-9EDC-DDB2344F8466");
 		public static readonly Guid OldGuid_genmdesc = new Guid("B7098DFA-31E6-4006-8A15-1C9A4E925149");
+
+		public static readonly Guid OldGuid_libgc = new Guid("21DF4C80-0EC9-4BFE-8552-2D47FCEF419A");
 		public static readonly Guid OldGuid_libgcbdwgc = new Guid("CF169633-14AF-4DB8-BEF9-26A6C8FE4C90");
+
 		public static readonly Guid OldGuid_libmono = new Guid("CB0D9E92-293C-439C-9AC7-C5F59B6E0771");
 		public static readonly Guid OldGuid_libmono_dynamic = new Guid("675F4175-FFB1-480D-AD36-F397578844D4");
 		public static readonly Guid OldGuid_libmonoruntime = new Guid("C36612BD-22D3-4B95-85E2-7FDC4FC5D739");

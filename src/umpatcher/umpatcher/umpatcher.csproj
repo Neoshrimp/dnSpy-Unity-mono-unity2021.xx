@@ -24,5 +24,8 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /Y &quot;$(TargetDir)$(TargetName).exe&quot; &quot;$(SolutionDir)\..\..\$(TargetName).exe&quot;" />
+  </Target>
 
 </Project>

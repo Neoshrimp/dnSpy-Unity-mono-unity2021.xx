@@ -18,24 +18,38 @@
 */
 
 using System;
+using System.IO;
+using System.Linq;
 
 namespace UnityMonoDllSourceCodePatcher.V40 {
 	sealed class LibmonoProjectPatcher : ProjectPatcherV40 {
-		readonly ProjectInfo libgcbdwgcProject;
+
+		readonly ProjectInfo? libgc;
+		readonly ProjectInfo? libgcbdwgcProject;
+
 
 		public LibmonoProjectPatcher(SolutionOptionsV40? solutionOptions)
 			: base(solutionOptions, solutionOptions?.LibmonoProject) {
-			libgcbdwgcProject = solutionOptions!.LibgcbdwgcProject ?? throw new InvalidOperationException();
+			libgcbdwgcProject = solutionOptions!.LibgcbdwgcProject;
+			libgc = solutionOptions!.LibgcProject;
+			if((libgc == null && libgcbdwgcProject == null) || (libgc != null && libgcbdwgcProject != null))
+				throw new InvalidOperationException();
 		}
 
 		protected override void PatchCore() {
 			PatchOutDirs();
 			PatchDebugInformationFormats(ConstantsV40.ReleaseConfigsWithNoPdb);
 			PatchGenerateDebugInformationTags(ConstantsV40.ReleaseConfigsWithNoPdb);
-			AddProjectReference(libgcbdwgcProject);
-			RemoveProjectReference("libgc.vcxproj");
+			if (libgc != null) { }
+			if (libgcbdwgcProject != null) {
+				AddProjectReference(libgcbdwgcProject);
+				RemoveProjectReference("libgc.vcxproj");
+			}
 			RemoveProjectReference("libgcmonosgen.vcxproj");
 			PatchSolutionDir();
 		}
+
+
+		
 	}
 }
