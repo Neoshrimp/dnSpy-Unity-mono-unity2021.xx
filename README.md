@@ -10,7 +10,7 @@ Main changes:
 
 Backwards compatibility with previous unity version was **not** tested.
 
-Built mono for 2021.3.18f1-mbe (commit hash: 81a7696b7c1960113bebfe610ac3e693c7d41fce) is available at releases
+Built mono for 2021.3.18f1-mbe (commit hash: 81a7696b7c1960113bebfe610ac3e693c7d41fce) is available at [releases](https://github.com/Neoshrimp/dnSpy-Unity-mono-unity2021.xx/releases/tag/2021.3.18f1).
 
 Many thanks to this [blog post](https://blog.csdn.net/Ricardo0012/article/details/127103492) for saving hours of debugging.
 
