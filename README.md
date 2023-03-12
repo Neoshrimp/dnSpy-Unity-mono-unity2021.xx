@@ -1,3 +1,23 @@
+# umpatcher update for Unity versions 2021.xx 
+*by Neoshrimp*
+
+Mono project structure seems to have changed quite a bit going from 2020.xx to 2021.xx. So much so that the current umpacher is unable to handle it. This fork attempts to fix that.
+
+Main changes:
+- Most of the git actions and checks for target repo (dnSpy-mono) were removed.
+- Added missing dependencies (libatomic_ops, brotli) and patched corresponding project files (clrcompression.targets)
+- Changed source code patcher to accommodate the new structure and fix some bugs.
+
+Backwards compatibility with previous unity version was **not** tested.
+
+Built mono for 2021.3.18f1-mbe (commit hash: 81a7696b7c1960113bebfe610ac3e693c7d41fce) is available at [releases](https://github.com/Neoshrimp/dnSpy-Unity-mono-unity2021.xx/releases/tag/2021.3.18f1).
+
+More builds at `builds/`
+
+Many thanks to this [blog post](https://blog.csdn.net/Ricardo0012/article/details/127103492) for saving hours of debugging.
+
+---
+
 This repo contains all files needed to build `mono.dll` & `mono-2.0-bdwgc.dll` with debugging support for Unity.
 
 The `master` branch contains the original files. You have to check out the `dnSpy` branch to build everything. Use VS2017.
@@ -369,3 +389,5 @@ version | git hash
 2019.4.26f1-mbe | 90cf2678d79ad248593837523bde01561ee6548e
 2019.4.28f1-mbe | 80e6f67978ff74743da62b80ccdce59aff033537
 2020.3.33f1-mbe | 734c22d2358f2a335d949022296f57d305ac24c1
+2021.3.14f1-mbe | acb7cd69d120a28d0e0e2e3f4509de412fff2fb1
+2021.3.18f1-mbe | 81a7696b7c1960113bebfe610ac3e693c7d41fce
