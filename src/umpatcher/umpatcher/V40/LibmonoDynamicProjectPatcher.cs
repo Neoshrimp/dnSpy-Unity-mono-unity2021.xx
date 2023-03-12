@@ -43,8 +43,12 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			AddSourceFiles();
 			if (libgc != null) {
 
-				var coreFxPatcher =  new CoreFxPatcher(solutionOptions);
-				coreFxPatcher.Patch();
+				// not exactly a sound assumption
+				if (File.Exists(Path.Combine(solutionOptions.UnityVersionDir, "external/corefx/src/Native/AnyOS/brotli/common/constants.c"))) {
+					var coreFxPatcher = new CoreFxPatcher(solutionOptions);
+					coreFxPatcher.Patch();
+				}
+
 				// change .o files location/name since corefx introdces a duplicate
 				textFilePatcher.GetIndexesOfLine(l => l.Text.Contains(@"<WarningLevel>Level3</WarningLevel>")).ToList()
 					.ForEach(i => UpdateOrCreateTag(i, i, "ObjectFileName", "$(IntDir)%(RelativeDir)"));
