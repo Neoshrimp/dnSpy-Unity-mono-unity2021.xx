@@ -64,6 +64,10 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 				var cleanSolFile = "clean-dnSpy-Unity-mono-v2021.x-V40.sln";				File.Copy(cleanSolFile, PathCombine(dnSpyRepo.RepoPath, cleanSolFile.Substring("clean-".Length)), overwrite: true);
 			}
 
+			if (solutionOptions.UnityVersion.Major == 2020) {
+				var cleanSolFile = "clean-dnSpy-Unity-mono-v2020.x-V40.sln";				File.Copy(cleanSolFile, PathCombine(dnSpyRepo.RepoPath, cleanSolFile.Substring("clean-".Length)), overwrite: true);
+			}
+
 			new SolutionPatcher(solutionOptions).Patch();
 
 			if (solutionOptions.UnityVersion.Major == 2021) {
@@ -80,7 +84,7 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			if (solutionOptions.EglibProject != null) new EglibProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.GenmdescProject != null) new GenmdescProjectPatcher(solutionOptions).Patch();
 
-			if (solutionOptions.LibgcbdwgcProject != null) new LibgcProjectPatcher(solutionOptions).Patch();
+			if (solutionOptions.LibgcProject != null) new LibgcProjectPatcher(solutionOptions).Patch();
 			if (solutionOptions.LibgcbdwgcProject != null) new LibgcbdwgcProjectPatcher(solutionOptions).Patch();
 
 			if (solutionOptions.LibmonoProject != null) new LibmonoProjectPatcher(solutionOptions).Patch();
@@ -92,11 +96,18 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 			Console.WriteLine("Patching source files");
 			var sp = new SourceCodePatcher(solutionOptions);
-			if (solutionOptions.UnityVersion.Major == 2021) {
+
+
+			switch (solutionOptions.UnityVersion.Major) {
+				case 2021:
 				sp.Patch2021();
-			}
-			else {
+				break;
+				case 2020:
+				sp.Patch2020();
+				break;
+				default:
 				sp.Patch();
+				break;
 			}
 		}
 	}

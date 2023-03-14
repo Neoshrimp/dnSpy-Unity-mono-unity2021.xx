@@ -39,6 +39,12 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 			Patch_bdwgc_gcconfig_h();
 		}
 
+		public void Patch2020() {
+			Patch();
+			Patch2021_mono_metadata_mono_debug_c();
+		}
+
+
 		public void Patch2021() { 
 			Patch_mono_metadata_icall_c();
 			Patch2021_mono_metadata_metadata_c();
@@ -52,8 +58,6 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 			// gc_atomic_ops.h is unpatched but libatomic is added 
 			Patch_bdwgc_gcconfig_h();
-
-
 		}
 
 		void Patch2021_mono_metadata_metadata_c() { 
