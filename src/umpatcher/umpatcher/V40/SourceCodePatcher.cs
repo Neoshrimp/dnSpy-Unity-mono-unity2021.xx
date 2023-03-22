@@ -41,14 +41,13 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 		public void Patch2020() {
 			Patch();
-			Patch2021_mono_metadata_mono_debug_c();
+			PatchAssert_mono_metadata_mono_debug_c();
 		}
 
 
 		public void Patch2021() { 
 			Patch_mono_metadata_icall_c();
-			Patch2021_mono_metadata_metadata_c();
-			Patch2021_mono_metadata_mono_debug_c();
+			PatchAssert_mono_metadata_mono_debug_c();
 			Patch2021_mono_mini_debugger_agent_c();
 			Patch2021_mono_mini_debugger_engine_c();
 			Patch2021_mono_mini_mini_runtime_c();
@@ -58,6 +57,11 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 			// gc_atomic_ops.h is unpatched but libatomic is added 
 			Patch_bdwgc_gcconfig_h();
+
+			// 'fix' for updated toolset version
+			if (solutionOptions.PlatformToolset == "v143") { 
+				Patch2021_mono_metadata_metadata_c();
+			}
 		}
 
 		void Patch2021_mono_metadata_metadata_c() { 
@@ -73,7 +77,7 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 		}
 
-		void Patch2021_mono_metadata_mono_debug_c() {
+		void PatchAssert_mono_metadata_mono_debug_c() {
 			var filename = Path.Combine(solutionOptions.UnityVersionDir, "mono", "metadata", "mono-debug.c");
 			var textFilePatcher = new TextFilePatcher(filename);
 			int index = textFilePatcher.GetIndexesOfLine(line => line.Text.StartsWith("mono_debug_init (")).Single();

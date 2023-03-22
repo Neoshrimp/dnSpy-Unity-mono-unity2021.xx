@@ -39,7 +39,7 @@ namespace UnityMonoDllSourceCodePatcher {
 			SolutionDirGuid = Guid.NewGuid();
 			if (!UnityVersion.TryParse(unityVersion, out UnityVersion))
 				throw new InvalidOperationException($"Invalid version: {unityVersion}");
-			SolutionFilename = Path.Combine(solutionDir, string.Format(solutionFilenameFormatString, UnityVersion.Major));
+			SolutionFilename = Path.Combine(solutionDir, UnityVersion + "-" + string.Format(solutionFilenameFormatString, UnityVersion.Major));
 			UnityVersionDir = versionPath ?? throw new ArgumentNullException(nameof(versionPath));
 			WindowsTargetPlatformVersion = windowsTargetPlatformVersion ?? throw new ArgumentNullException(nameof(windowsTargetPlatformVersion));
 			PlatformToolset = platformToolset ?? throw new ArgumentNullException(nameof(platformToolset));

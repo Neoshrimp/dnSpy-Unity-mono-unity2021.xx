@@ -25,7 +25,7 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(TargetDir)$(TargetName).exe&quot; &quot;$(SolutionDir)\..\..\$(TargetName).exe&quot;" />
+    <Exec Command="copy /Y &quot;$(TargetDir)\..\net48\umpatcher.exe&quot; &quot;$(SolutionDir)\..\..\umpatcher.exe&quot;" />
   </Target>
 
 </Project>

@@ -60,13 +60,10 @@ namespace UnityMonoDllSourceCodePatcher.V40 {
 
 		protected override void PatchOriginalFilesCore() {
 			Console.WriteLine("Patching solution and projects");
-			if (solutionOptions.UnityVersion.Major == 2021) {
-				var cleanSolFile = "clean-dnSpy-Unity-mono-v2021.x-V40.sln";				File.Copy(cleanSolFile, PathCombine(dnSpyRepo.RepoPath, cleanSolFile.Substring("clean-".Length)), overwrite: true);
+			if (solutionOptions.UnityVersion.Major == 2021 || solutionOptions.UnityVersion.Major == 2020) {
+				var cleanSolFile = $"clean-dnSpy-Unity-mono-v{solutionOptions.UnityVersion.Major}.x-V40.sln";				File.Copy(cleanSolFile, solutionOptions.SolutionFilename, overwrite: true);
 			}
 
-			if (solutionOptions.UnityVersion.Major == 2020) {
-				var cleanSolFile = "clean-dnSpy-Unity-mono-v2020.x-V40.sln";				File.Copy(cleanSolFile, PathCombine(dnSpyRepo.RepoPath, cleanSolFile.Substring("clean-".Length)), overwrite: true);
-			}
 
 			new SolutionPatcher(solutionOptions).Patch();
 
