@@ -8,13 +8,22 @@ Main changes:
 - Added missing dependencies (libatomic_ops, brotli) and patched corresponding project files (clrcompression.targets)
 - Changed source code patcher to accommodate the new structure and fix some bugs.
 
-Backwards compatibility with previous unity version was **not** tested.
+Backwards compatibility was only tested with some 2020.x versions.
 
-Built mono for 2021.3.18f1-mbe (commit hash: 81a7696b7c1960113bebfe610ac3e693c7d41fce) is available at [releases](https://github.com/Neoshrimp/dnSpy-Unity-mono-unity2021.xx/releases/tag/2021.3.18f1).
-
-More builds at `builds/`
+Patched mono dlls can be found at `builds/` folder.
 
 Many thanks to this [blog post](https://blog.csdn.net/Ricardo0012/article/details/127103492) for saving hours of debugging.
+
+### Tips for building and attaching
+
+`toolset` version actually matters. Unity version 2020.x or bellow should use `v141`. Else dnSpy will mysterious fail to attach a game with patched mono.  VisualStudio 2017 Buildtools must be installed for `v141` to be available. 
+
+Versions 2021.x seem to work fine with both `v141` and `v143` toolsets. In case of using `v143` a slight source code patch is needed, therefore, it's best to specify `--toolset v143` flag when running the umpatcher.
+
+Rarely, a debugger connection might fail due to ports being reserved or used. Run command `netsh int ipv4 show excludedportrange tc` to list port ranges reserved by Windows. Make sure ports specified by `DNSPY_UNITY_DBG` and `DNSPY_UNITY_DBG2` environmental variables are not within these ranges.
+
+Thanks to [funny-ppt](https://github.com/Funny-ppt/) for figuring this out.
+
 
 ---
 
@@ -389,5 +398,6 @@ version | git hash
 2019.4.26f1-mbe | 90cf2678d79ad248593837523bde01561ee6548e
 2019.4.28f1-mbe | 80e6f67978ff74743da62b80ccdce59aff033537
 2020.3.33f1-mbe | 734c22d2358f2a335d949022296f57d305ac24c1
+2020.3.43f1-mbe | 98b3752f0139c20a72d9e70e68f8b0a679d6fd7b
 2021.3.14f1-mbe | acb7cd69d120a28d0e0e2e3f4509de412fff2fb1
 2021.3.18f1-mbe | 81a7696b7c1960113bebfe610ac3e693c7d41fce
