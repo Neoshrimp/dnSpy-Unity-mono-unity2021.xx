@@ -23,35 +23,35 @@
     <ClInclude Include="..\winconfig.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F353F053-CDB9-41C8-85F6-3803FE60F19C}</ProjectGuid>
+    <ProjectGuid>{0DBD9811-35BA-49B3-ABCA-D80D46941DD6}</ProjectGuid>
     <RootNamespace>buildinit</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -138,6 +138,7 @@
   <Import Project="mono.winconfig.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+
   <Target Name="AfterBuildWinSetup">
     <PropertyGroup>
       <_EnableDefines Condition="'$(MONO_ENABLE_LLVM)' == 'true'">$(_EnableDefines);ENABLE_LLVM;ENABLE_LLVM_RUNTIME</_EnableDefines>
@@ -150,17 +151,26 @@
       <Output TaskParameter="MonoVersion" PropertyName="_MonoVersion" />
       <Output TaskParameter="MonoCorlibVersion" PropertyName="_MonoCorlibVersion" />
     </GetVersionsFromConfigureAC>
-    <WinConfigSetup ConfigFileRoot="$(MSBuildThisFileDirectory)..\" MonoVersion="$(_MonoVersion)" MonoCorlibVersion="$(_MonoCorlibVersion)" DisableDefines="" EnableDefines="$(_EnableDefines)" HaveDefines="$(_HaveDefines)" />
+    <WinConfigSetup ConfigFileRoot="$(MSBuildThisFileDirectory)..\"
+                    MonoVersion="$(_MonoVersion)"
+                    MonoCorlibVersion="$(_MonoCorlibVersion)"
+                    DisableDefines=""
+                    EnableDefines="$(_EnableDefines)"
+                    HaveDefines="$(_HaveDefines)"/>
   </Target>
+
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildWinSetup" />
+
   <Target Name="_BackupConfigFile" Condition="'$(_MonoConfigFileBackupExists)' != 'true' and Exists('$(MONO_DIR)/config.h')">
     <Copy SourceFiles="$(MONO_DIR)/config.h" DestinationFiles="$(MONO_DIR)/cygconfig.h" />
   </Target>
+
   <Target Name="_CheckConfigFile">
     <_CheckConfigurationProperty ConfFile="$(MONO_DIR)/config.h" ConfRegEx="#include.*cygconfig.h.*">
       <Output TaskParameter="ConfPropertyFoundMatch" PropertyName="_MonoConfigFileBackupExists" />
     </_CheckConfigurationProperty>
   </Target>
+
   <PropertyGroup>
     <PrepareForBuildDependsOn>
       _CheckConfigFile;
@@ -168,4 +178,5 @@
       $(PrepareForBuildDependsOn);
     </PrepareForBuildDependsOn>
   </PropertyGroup>
+
 </Project>

@@ -23,7 +23,7 @@
     <ClInclude Include="..\eglib\config.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{492B6A32-3CF3-4D45-A87D-76EA9FF3E4FC}</ProjectGuid>
+    <ProjectGuid>{D60C7BAA-71FE-4202-A14A-A5D96C8AF619}</ProjectGuid>
     <RootNamespace>buildinit</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

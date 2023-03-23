@@ -19,34 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1059EC43-5BE8-45DF-A021-9986A7806809}</ProjectGuid>
+    <ProjectGuid>{FF7E53E2-12CF-42FC-A103-CB5944D4A85F}</ProjectGuid>
     <RootNamespace>libmono-dynamic</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -72,25 +72,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>mono-2.0$(MONO_TARGET_SUFFIX)</TargetName>
-    <OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
+<OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
     <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>mono-2.0$(MONO_TARGET_SUFFIX)</TargetName>
-    <OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
+<OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
     <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>mono-2.0$(MONO_TARGET_SUFFIX)</TargetName>
-    <OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
+<OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
     <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>mono-2.0$(MONO_TARGET_SUFFIX)</TargetName>
-    <OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
+<OutDir>..\..\builds\$(Configuration)\unity-2021.3.18f1\win$(PlatformArchitecture)\</OutDir>
     <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -216,7 +216,7 @@
       <Project>{c3d4c623-55f8-4653-980d-61aa629b4e1d}</Project>
     </ProjectReference>
     <ProjectReference Include="genmdesc.vcxproj">
-      <Project>{5ea0049b-9378-47ce-83f2-6206c6c1e045}</Project>
+      <Project>{b67292e8-8a70-42e7-8fb7-42fb8689e3a8}</Project>
     </ProjectReference>
     <ProjectReference Include="libgc.vcxproj" Condition="'$(MONO_TARGET_GC)'=='boehm'">
       <Project>{eb56000b-c80b-4e8b-908d-d84d31b517d3}</Project>
@@ -226,9 +226,11 @@
     <ClCompile Include="$(MonoSourceLocation)\mono\mini\mini-windows-dllmain.c" />
     <ClCompile Include="..\mono\metadata\oop.c" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="dnSpy.h" />
-  </ItemGroup>
+
+<ItemGroup>
+  <ClInclude Include="dnSpy.h" />
+</ItemGroup>
+
   <Import Project="clrcompression.targets" />
   <Import Project="eglib.targets" />
   <Import Project="libmonoutils.targets" />

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{93BBBF6C-C7E7-4AA6-A323-5643D7F446FA}</ProjectGuid>
+    <ProjectGuid>{61BC1720-19B1-430B-94CB-A67CBFE61D77}</ProjectGuid>
     <RootNamespace>libmono-dynamic</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -251,10 +251,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="genmdesc.vcxproj">
-      <Project>{cf9c970b-a6a7-453a-b351-79ea976cd744}</Project>
+      <Project>{27252d96-4b7b-485f-a64b-17140931cdb5}</Project>
     </ProjectReference>
     <ProjectReference Include="libgcbdwgc.vcxproj">
-      <Project>{5d9a3430-7bb6-4502-9c52-e41ba57019cb}</Project>
+      <Project>{db465afd-b9b8-428d-a37b-496d8a1839b0}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

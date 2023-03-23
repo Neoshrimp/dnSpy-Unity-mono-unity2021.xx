@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnSpyFiles", "dnSpyFiles", "{BCDFE47C-A4D8-4F5C-BCED-4AEBDC711E34}"
 	ProjectSection(SolutionItems) = preProject
 		dnSpyFiles\dnSpy.c = dnSpyFiles\dnSpy.c
-		dnSpyFiles\dnSpy.h = dnSpyFiles\dnSpy.h
 	EndProjectSection
 EndProject
 Global

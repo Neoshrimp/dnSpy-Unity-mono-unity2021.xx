@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CF9C970B-A6A7-453A-B351-79EA976CD744}</ProjectGuid>
+    <ProjectGuid>{27252D96-4B7B-485F-A64B-17140931CDB5}</ProjectGuid>
     <RootNamespace>genmdesc</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -342,7 +342,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="eglib.vcxproj">
-      <Project>{2b4fc00c-48ab-4362-8f90-7834e55ec9db}</Project>
+      <Project>{fbd23a00-8b90-482a-9208-1e53f78f4387}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

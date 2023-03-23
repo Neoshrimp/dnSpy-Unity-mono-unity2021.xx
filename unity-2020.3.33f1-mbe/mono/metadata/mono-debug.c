@@ -134,7 +134,8 @@ free_debug_handle (MonoDebugHandle *handle)
 void
 mono_debug_init (MonoDebugFormat format)
 {
-	g_assert (!mono_debug_initialized);
+	if (mono_debug_initialized) return;
+//	g_assert (!mono_debug_initialized);
 	if (format == MONO_DEBUG_FORMAT_DEBUGGER)
 		g_error ("The mdb debugger is no longer supported.");
 

@@ -35,9 +35,5 @@
     <ClCompile Include="..\mono\metadata\oop.c">
       <Filter>Source Files\libmini\unity</Filter>
     </ClCompile>
-    <ClCompile Include="$(MonoSourceLocation)\mono\mini\dnSpy.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="dnSpy.h" />
   </ItemGroup>
 </Project>

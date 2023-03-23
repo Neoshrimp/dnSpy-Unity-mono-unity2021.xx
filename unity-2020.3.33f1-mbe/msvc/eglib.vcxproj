@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2B4FC00C-48AB-4362-8F90-7834E55EC9DB}</ProjectGuid>
+    <ProjectGuid>{FBD23A00-8B90-482A-9208-1E53F78F4387}</ProjectGuid>
     <RootNamespace>eglib</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
@@ -149,7 +149,7 @@
   <Import Project="eglib.targets" />
   <ItemGroup>
     <ProjectReference Include="build-init.vcxproj">
-      <Project>{492b6a32-3cf3-4d45-a87d-76ea9ff3e4fc}</Project>
+      <Project>{d60c7baa-71fe-4202-a14a-a5d96c8af619}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
