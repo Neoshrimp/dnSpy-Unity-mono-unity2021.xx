@@ -35,5 +35,10 @@
     <ClCompile Include="..\mono\metadata\oop.c">
       <Filter>Source Files\libmini\unity</Filter>
     </ClCompile>
+    <ClCompile Include="$(MonoSourceLocation)\mono\mini\dnSpy.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dnSpy.h" />
+    <ClInclude Include="$(MonoSourceLocation)\external\corefx\src\Native\AnyOS\brotli\enc\encoder_dict.h" />
   </ItemGroup>
 </Project>
