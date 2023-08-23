@@ -54,8 +54,8 @@ namespace UnityMonoDllSourceCodePatcher {
 				ThrowError($"Git submodule update {path} failed with error code {result}");
 		}
 
-		public void CheckOut(string hashOrBranchName) {
-			int result = Exec.Run(repoPath, gitPath, $"checkout {hashOrBranchName}");
+		public void CheckOut(string hashOrBranchName, bool force = false) {
+			int result = Exec.Run(repoPath, gitPath, $"checkout {(force ? "-f": "")} {hashOrBranchName}");
 			if (result != 0)
 				ThrowError($"Git checkout {hashOrBranchName} failed with error code {result}");
 		}
